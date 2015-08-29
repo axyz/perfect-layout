@@ -1,0 +1,16 @@
+{
+  "name": "perfect-layout",
+  "version": "1.0.0",
+  "description": "Image layout generator based on linear partitioning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrea Moretti (@axyz) <axyzxp@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babelify": "^6.2.0",
+    "browserify": "^11.0.1",
+    "uglifyify": "^3.0.1"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "perfect-layout",
+  "description": "Image layout generator based on linear partitioning",
+  "main": "dist/perfectLayout.min.js",
+  "version": "1.0.0",
+  "authors": [
+    "Andrea Moretti <axyzxp@gmail.com>"
+  ],
+  "moduleType": [
+    "es6",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "gallery",
+    "images",
+    "layout",
+    "linear",
+    "partition"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
