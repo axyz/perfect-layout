@@ -4,7 +4,7 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports['default'] = _perfectLayout;
+exports['default'] = perfectLayout;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -12,7 +12,10 @@ var _libGreedyLinearPartitionJs = require('./lib/greedyLinearPartition.js');
 
 var _libGreedyLinearPartitionJs2 = _interopRequireDefault(_libGreedyLinearPartitionJs);
 
-function _perfectLayout(photos, screenWidth, screenHeight) {
+function perfectLayout(photos, screenWidth, screenHeight, opts) {
+  opts = opts || {};
+  opts.margin = opts.hasOwnProperty('margin') ? opts.margin : 0;
+
   var rows = _perfectRowsNumber(photos, screenWidth, screenHeight);
   var idealHeight = parseInt(screenHeight / 2, 10);
 
@@ -21,7 +24,7 @@ function _perfectLayout(photos, screenWidth, screenHeight) {
       return {
         data: img.data,
         src: img.src,
-        width: parseInt(idealHeight * img.ratio),
+        width: parseInt(idealHeight * img.ratio) - opts.margin * 2,
         height: idealHeight
       };
     });
@@ -44,15 +47,13 @@ function _perfectLayout(photos, screenWidth, screenHeight) {
         return {
           data: img.data,
           src: img.src,
-          width: parseInt(screenWidth / summedRatios * img.ratio, 10),
+          width: parseInt(screenWidth / summedRatios * img.ratio, 10) - opts.margin * 2,
           height: parseInt(screenWidth / summedRatios, 10)
         };
       });
     });
   }
 }
-
-;
 
 function _perfectRowsNumber(photos, screenWidth, screenHeight) {
   var idealHeight = parseInt(screenHeight / 2, 10);

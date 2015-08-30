@@ -1,6 +1,11 @@
 import greedyLinearPartition from './lib/greedyLinearPartition.js';
 
-export default function _perfectLayout(photos, screenWidth, screenHeight) {
+export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
+  opts = opts || {};
+  opts.margin = opts.hasOwnProperty('margin')
+    ? opts.margin
+    : 0;
+
   const rows = _perfectRowsNumber(photos, screenWidth, screenHeight);
   const idealHeight = parseInt(screenHeight / 2, 10);
 
@@ -9,7 +14,7 @@ export default function _perfectLayout(photos, screenWidth, screenHeight) {
       return {
         data: img.data,
         src: img.src,
-        width: parseInt(idealHeight * img.ratio),
+        width: parseInt(idealHeight * img.ratio) - (opts.margin * 2),
         height: idealHeight
       };
     });
@@ -28,13 +33,13 @@ export default function _perfectLayout(photos, screenWidth, screenHeight) {
         return {
           data: img.data,
           src: img.src,
-          width: parseInt((screenWidth / summedRatios) * img.ratio, 10),
+          width: parseInt((screenWidth / summedRatios) * img.ratio, 10) - (opts.margin * 2),
           height: parseInt(screenWidth / summedRatios, 10)
         };
       });
     });
   }
-};
+}
 
 function _perfectRowsNumber(photos, screenWidth, screenHeight) {
   const idealHeight = parseInt(screenHeight / 2, 10);

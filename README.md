@@ -1,7 +1,8 @@
-## Perfect Layout
+# Perfect Layout
+
+[Medium Article](https://medium.com/@axyz/in-search-of-the-perfect-image-gallery-34f46f7615a1)
 
 [DEMO](http://codepen.io/axyz/full/VLJrKr/)
-[Medium Article](https://medium.com/@axyz/in-search-of-the-perfect-image-gallery-34f46f7615a1)
 
 given an array of images in the form
 
@@ -25,7 +26,7 @@ returns an array of images in the form
 
 where WIDTH and HEIGHT are the dimensions that image must have to fit the layout.
 
-### Usage
+## Usage
 
 on node
 ```
@@ -41,8 +42,19 @@ while on the browser you can just
 ```
 then
 ```
-var perfectRows = perfectLayout(photos, width, height);
+var perfectRows = perfectLayout(photos, width, height, {
+  // default options
+  margin: 0
+});
 ```
+
+### Options
+
+- margin: [number]
+If you are going to use a css margin for your images you need to specify it here
+as well, so that the layout will adapt to scale down the images accordingly.
+
+## Motivations
 
 This was inspired by [chromatic.io](http://www.chromatic.io/FQrLQsb) galleries
 and I want to credit the [@crispymtn](https://github.com/crispymtn) team for the
@@ -51,6 +63,8 @@ original implementation.
 This version aim to be more lightweight using a greedy algorithm instead of the
 optimal one and also leave to the user the responsability to choose how to
 manipulate the DOM accordingly to the returned array.
+
+## Example jQuery plugin
 
 for convenience a jquery plugin is included for a basic usage.
 
@@ -74,8 +88,22 @@ $(document).ready(function() {
 </script>
 ```
 
+*N.B.* Please note that this is only an example on how to use the `perfectLayout` function.
+The jQuery plugin is not to be used in production as it do not provide any
+crossbrowser optimization, at the time of writing it should however correctly
+work on the latest chrome and firefox browsers on linux.
+
 For custom behaviour give a look at the [jqueryPlugin.js](https://github.com/axyz/perfect-layout/blob/master/jqueryPlugin.js) 
 and use it as a starting point to generate the desired DOM nodes.
 
 the data field can be used to populate the images with any needed metadata
 you may need and is probably a good idea to provide it from your backend.
+
+## Changelog
+
+## [v1.1.0]
+### Added
+- margin option
+
+## [v1.0.0]
+### Initial Release
