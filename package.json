@@ -1,6 +1,6 @@
 {
   "name": "perfect-layout",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Image layout generator based on linear partitioning",
   "main": "index.js",
   "scripts": {
