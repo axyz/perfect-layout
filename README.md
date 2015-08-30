@@ -29,7 +29,7 @@ where WIDTH and HEIGHT are the dimensions that image must have to fit the layout
 
 on node
 ```
-$ npm install --save perect-layout
+$ npm install --save perfect-layout
 ```
 and
 ```
