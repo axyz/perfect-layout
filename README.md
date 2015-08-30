@@ -1,5 +1,8 @@
 ## Perfect Layout
 
+[DEMO](http://codepen.io/axyz/full/VLJrKr/)
+[Medium Article](https://medium.com/@axyz/in-search-of-the-perfect-image-gallery-34f46f7615a1)
+
 given an array of images in the form
 
 ```
