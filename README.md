@@ -33,7 +33,7 @@ $ npm install --save perect-layout
 ```
 and
 ```
-var perfectLayout = require('perfectLayout')
+var perfectLayout = require('perfect-layout')
 ```
 while on the browser you can just
 ```
