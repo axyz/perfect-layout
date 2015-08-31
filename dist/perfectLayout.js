@@ -8,9 +8,9 @@ exports['default'] = perfectLayout;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _libGreedyLinearPartitionJs = require('./lib/greedyLinearPartition.js');
+var _libBSTLinearPartitionJs = require('./lib/BSTLinearPartition.js');
 
-var _libGreedyLinearPartitionJs2 = _interopRequireDefault(_libGreedyLinearPartitionJs);
+var _libBSTLinearPartitionJs2 = _interopRequireDefault(_libBSTLinearPartitionJs);
 
 function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
@@ -29,29 +29,35 @@ function perfectLayout(photos, screenWidth, screenHeight, opts) {
       };
     });
   } else {
-    var weights = photos.map(function (img) {
-      return parseInt(img.ratio * 100, 10);
-    });
-    var partitions = (0, _libGreedyLinearPartitionJs2['default'])(weights, rows);
-
-    var current = 0;
-
-    return partitions.map(function (row) {
-      var summedRatios = row.reduce(function (sum, el, i) {
-        return sum += photos[current + i].ratio;
-      }, 0);
-
-      return row.map(function (el) {
-        var img = photos[current++];
-
-        return {
-          data: img.data,
-          src: img.src,
-          width: parseInt(screenWidth / summedRatios * img.ratio, 10) - opts.margin * 2,
-          height: parseInt(screenWidth / summedRatios, 10)
-        };
+    var _ret = (function () {
+      var weights = photos.map(function (img) {
+        return parseInt(img.ratio * 100, 10);
       });
-    });
+      var partitions = (0, _libBSTLinearPartitionJs2['default'])(weights, rows);
+
+      var current = 0;
+
+      return {
+        v: partitions.map(function (row) {
+          var summedRatios = row.reduce(function (sum, el, i) {
+            return sum + photos[current + i].ratio;
+          }, 0);
+
+          return row.map(function () {
+            var img = photos[current++];
+
+            return {
+              data: img.data,
+              src: img.src,
+              width: parseInt(screenWidth / summedRatios * img.ratio, 10) - opts.margin * 2,
+              height: parseInt(screenWidth / summedRatios, 10)
+            };
+          });
+        })
+      };
+    })();
+
+    if (typeof _ret === 'object') return _ret.v;
   }
 }
 
@@ -64,24 +70,62 @@ function _perfectRowsNumber(photos, screenWidth, screenHeight) {
 }
 module.exports = exports['default'];
 
-},{"./lib/greedyLinearPartition.js":2}],2:[function(require,module,exports){
+},{"./lib/BSTLinearPartition.js":2}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports['default'] = greedyLinearPartition;
+exports['default'] = BSTLinearPartition;
 
-function greedyLinearPartition(seq, k) {
-  return seq.sort(function (a, b) {
-    return b - a;
-  }).reduce(function (res, el) {
-    res[smallerArrayIndex(res)].push(el);
+function BSTLinearPartition(seq, k) {
+  if (seq.length <= 1) return [seq];
+  if (k >= seq.length) return seq.map(function (el) {
+    return [el];
+  });
+
+  var limit = threshold(seq, k);
+  var current = 0;
+
+  return seq.reduce(function (res, el) {
+    if (sum(res[current]) + el > limit) current++;
+    res[current].push(el);
     return res;
     // waiting for more elegant solutions (Array.fill) to work correctly
-  }, new Array(k).join().split(',').map(function (i) {
+  }, new Array(k).join().split(',').map(function () {
     return [];
   }));
+}
+
+// find the perfect limit that we should not pass when adding elements
+// to a single partition.
+function threshold(seq, k) {
+  var bottom = max(seq);
+  var top = sum(seq);
+
+  while (bottom < top) {
+    var mid = bottom + (top - bottom) / 2;
+
+    if (requiredElements(seq, mid) <= k) {
+      top = mid;
+    } else {
+      bottom = mid + 1;
+    }
+  }
+  return bottom;
+}
+
+// find how many elements from [seq] we cann group together stating below
+// [limit] by adding their weights
+function requiredElements(seq, limit) {
+  return seq.reduce(function (res, el) {
+    res.tot += el;
+    if (res.tot > limit) {
+      res.tot = el;
+      res.n++;
+    }
+    return res;
+  }, { tot: 0, n: 1 }).n;
 }
 
 function sum(arr) {
@@ -90,9 +134,9 @@ function sum(arr) {
   }, 0);
 }
 
-function smallerArrayIndex(list) {
-  return list.reduce(function (i, array, index) {
-    return sum(array) < sum(list[i]) ? index : i;
+function max(arr) {
+  return arr.reduce(function (max, el) {
+    return el > max ? el : max;
   }, 0);
 }
 module.exports = exports['default'];

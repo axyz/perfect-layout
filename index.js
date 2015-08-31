@@ -1,4 +1,4 @@
-import greedyLinearPartition from './lib/greedyLinearPartition.js';
+import BSTLinearPartition from './lib/BSTLinearPartition.js';
 
 export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
@@ -20,14 +20,14 @@ export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
     });
   } else {
     const weights = photos.map(img => parseInt(img.ratio * 100, 10));
-    const partitions = greedyLinearPartition(weights, rows);
+    const partitions = BSTLinearPartition(weights, rows);
 
-    var current = 0;
+    let current = 0;
 
     return partitions.map(row => {
-      const summedRatios = row.reduce((sum, el, i) => sum += photos[current+i].ratio, 0);
+      const summedRatios = row.reduce((sum, el, i) => sum + photos[current + i].ratio, 0);
 
-      return row.map(el => {
+      return row.map(() => {
         const img = photos[current++];
 
         return {

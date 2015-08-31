@@ -101,6 +101,15 @@ you may need and is probably a good idea to provide it from your backend.
 
 ## Changelog
 
+## [v1.1.1]
+### Changed
+- using BST based linear partitioning instead of greedy one
+- huge speed improvement
+- the resulting set is now optimal
+### Fixed
+- the partition will now keep the same order as the input array
+- the layout should now be equal to the chromatic.io one in all the cases
+
 ## [v1.1.0]
 ### Added
 - margin option
