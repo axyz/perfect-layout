@@ -105,7 +105,7 @@ function findLayoutWidth(imageRatioSequence, expectedRowCount) {
   var galleryWidth = max([idealWidth, widestItem]);
   var layout = getLayoutDetails(imageRatioSequence, galleryWidth);
 
-  while (layout.rowCount > rowCount) {
+  while (layout.rowCount > expectedRowCount) {
     galleryWidth += layout.nextBreakpoint;
 
     layout = getLayoutDetails(imageRatioSequence, galleryWidth);
