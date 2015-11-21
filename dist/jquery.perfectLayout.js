@@ -163,7 +163,7 @@ function getLayoutDetails(imageRatioSequence, expectedWidth) {
     }
     return layout;
   }, startingLayout);
-  return { rowCount: layout.rowCount, nextBreakpoint: layout.nextBreakpoint };
+  return { rowCount: finalLayout.rowCount, nextBreakpoint: finalLayout.nextBreakpoint };
 }
 
 function sum(arr) {
