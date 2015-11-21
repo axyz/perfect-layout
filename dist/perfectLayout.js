@@ -8,9 +8,9 @@ exports['default'] = perfectLayout;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _libBSTLinearPartitionJs = require('./lib/BSTLinearPartition.js');
+var _libBreakpointPartitionJs = require('./lib/BreakpointPartition.js');
 
-var _libBSTLinearPartitionJs2 = _interopRequireDefault(_libBSTLinearPartitionJs);
+var _libBreakpointPartitionJs2 = _interopRequireDefault(_libBreakpointPartitionJs);
 
 function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
@@ -33,7 +33,7 @@ function perfectLayout(photos, screenWidth, screenHeight, opts) {
       var weights = photos.map(function (img) {
         return parseInt(img.ratio * 100, 10);
       });
-      var partitions = (0, _libBSTLinearPartitionJs2['default'])(weights, rows);
+      var partitions = (0, _libBreakpointPartitionJs2['default'])(weights, rows);
 
       var current = 0;
 
@@ -70,62 +70,71 @@ function _perfectRowsNumber(photos, screenWidth, screenHeight) {
 }
 module.exports = exports['default'];
 
-},{"./lib/BSTLinearPartition.js":2}],2:[function(require,module,exports){
+},{"./lib/BreakpointPartition.js":2}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports['default'] = BSTLinearPartition;
+exports['default'] = BreakpointPartition;
 
-function BSTLinearPartition(seq, k) {
-  if (seq.length <= 1) return [seq];
-  if (k >= seq.length) return seq.map(function (el) {
-    return [el];
+function BreakpointPartition(imageRatioSequence, expectedRowCount) {
+  if (imageRatioSequence.length <= 1) return [imageRatioSequence];
+  if (expectedRowCount >= imageRatioSequence.length) return imageRatioSequence.map(function (item) {
+    return [item];
   });
 
-  var limit = threshold(seq, k);
-  var current = 0;
+  var layoutWidth = findLayoutWidth(imageRatioSequence, expectedRowCount);
+  var currentRow = 0;
 
-  return seq.reduce(function (res, el) {
-    if (sum(res[current]) + el > limit) current++;
-    res[current].push(el);
-    return res;
+  return imageRatioSequence.reduce(function (rows, imageRatio) {
+    if (sum(rows[currentRow]) + imageRatio > layoutWidth) currentRow++;
+    rows[currentRow].push(imageRatio);
+    return rows;
     // waiting for more elegant solutions (Array.fill) to work correctly
-  }, new Array(k).join().split(',').map(function () {
+  }, new Array(expectedRowCount).join().split(',').map(function () {
     return [];
   }));
 }
 
-// find the perfect limit that we should not pass when adding elements
-// to a single partition.
-function threshold(seq, k) {
-  var bottom = max(seq);
-  var top = sum(seq);
+// starting at the ideal width, expand to the next breakpoint until we find
+// a width that produces the expected number of rows
+function findLayoutWidth(imageRatioSequence, expectedRowCount) {
+  var idealWidth = sum(imageRatioSequence) / expectedRowCount;
+  var widestItem = max(imageRatioSequence);
+  var galleryWidth = max([idealWidth, widestItem]);
+  var layout = getLayoutDetails(imageRatioSequence, layoutWidth);
 
-  while (bottom < top) {
-    var mid = bottom + (top - bottom) / 2;
+  while (layout.rowCount > rowCount) {
+    layoutWidth += layout.nextBreakpoint;
 
-    if (requiredElements(seq, mid) <= k) {
-      top = mid;
-    } else {
-      bottom = mid + 1;
-    }
+    layout = getLayoutDetails(imageRatioSequence, layoutWidth);
   }
-  return bottom;
+  return layoutWidth;
 }
 
-// find how many elements from [seq] we cann group together stating below
-// [limit] by adding their weights
-function requiredElements(seq, limit) {
-  return seq.reduce(function (res, el) {
-    res.tot += el;
-    if (res.tot > limit) {
-      res.tot = el;
-      res.n++;
+// find the
+function getLayoutDetails(imageRatioSequence, expectedWidth) {
+  var startingLayout = {
+    currentRowWidth: 0,
+    rowCount: 1,
+    // the largest possible step to the next breakpoint is the smallest image ratio
+    nextBreakpoint: Math.min.apply(null, imageRatioSequence)
+  };
+  var finalLayout = imageRatioSequence.reduce(function (layout, itemWidth) {
+    var rowWidth = layout.currentRowWidth + itemWidth;
+    var nextBreakpoint = undefined;
+    if (rowWidth > expectedWidth) {
+      nextBreakpointForCurrentRow = layout.currentRowWidth - expectedWidth;
+      if (nextBreakpointForCurrentRow < layout.nextBreakpoint) {
+        layout.nextBreakpoint = nextBreakpointForCurrentRow;
+      }
+      layout.rowCount += 1;
+      layout.currentRowWidth = itemWidth;
     }
-    return res;
-  }, { tot: 0, n: 1 }).n;
+    return layout;
+  }, startingLayout);
+  return { rowCount: layout.rowCount, nextBreakpoint: layout.nextBreakpoint };
 }
 
 function sum(arr) {
