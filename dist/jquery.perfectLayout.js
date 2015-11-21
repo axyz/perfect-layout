@@ -132,14 +132,14 @@ function findLayoutWidth(imageRatioSequence, expectedRowCount) {
   var idealWidth = sum(imageRatioSequence) / expectedRowCount;
   var widestItem = max(imageRatioSequence);
   var galleryWidth = max([idealWidth, widestItem]);
-  var layout = getLayoutDetails(imageRatioSequence, layoutWidth);
+  var layout = getLayoutDetails(imageRatioSequence, galleryWidth);
 
   while (layout.rowCount > rowCount) {
-    layoutWidth += layout.nextBreakpoint;
+    galleryWidth += layout.nextBreakpoint;
 
-    layout = getLayoutDetails(imageRatioSequence, layoutWidth);
+    layout = getLayoutDetails(imageRatioSequence, galleryWidth);
   }
-  return layoutWidth;
+  return galleryWidth;
 }
 
 // find the
