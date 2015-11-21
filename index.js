@@ -1,4 +1,4 @@
-import BSTLinearPartition from './lib/BSTLinearPartition.js';
+import BreakpointPartition from './lib/BreakpointPartition.js';
 
 export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
@@ -20,7 +20,7 @@ export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
     });
   } else {
     const weights = photos.map(img => parseInt(img.ratio * 100, 10));
-    const partitions = BSTLinearPartition(weights, rows);
+    const partitions = BreakpointPartition(weights, rows);
 
     let current = 0;
 
