@@ -123,14 +123,16 @@ function getLayoutDetails(imageRatioSequence, expectedWidth) {
   };
   var finalLayout = imageRatioSequence.reduce(function (layout, itemWidth) {
     var rowWidth = layout.currentRowWidth + itemWidth;
-    var nextBreakpoint = undefined;
+    var currentRowsNextBreakpoint = undefined;
     if (rowWidth > expectedWidth) {
-      nextBreakpointForCurrentRow = layout.currentRowWidth - expectedWidth;
-      if (nextBreakpointForCurrentRow < layout.nextBreakpoint) {
-        layout.nextBreakpoint = nextBreakpointForCurrentRow;
+      currentRowsNextBreakpoint = rowWidth - expectedWidth;
+      if (currentRowsNextBreakpoint < layout.nextBreakpoint) {
+        layout.nextBreakpoint = currentRowsNextBreakpoint;
       }
       layout.rowCount += 1;
       layout.currentRowWidth = itemWidth;
+    } else {
+      layout.currentRowWidth = rowWidth;
     }
     return layout;
   }, startingLayout);
