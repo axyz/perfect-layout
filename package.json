@@ -4,7 +4,12 @@
   "description": "Image layout generator based on linear partitioning",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify index.js -t babelify -t uglifyify --standalone perfectLayout -o dist/perfectLayout.min.js",
+    "build-dev": "browserify index.js -t babelify --standalone perfectLayout -o dist/perfectLayout.js",
+    "build-jquery": "npm run build && browserify jqueryPlugin.js -t babelify -t uglifyify -o dist/jquery.perfectLayout.min.js",
+    "build-jquery-dev": "npm run build-dev && browserify jqueryPlugin.js -t babelify -o dist/jquery.perfectLayout.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "npm run build && npm run build-jquery"
   },
   "author": "Andrea Moretti (@axyz) <axyzxp@gmail.com>",
   "license": "MIT",
