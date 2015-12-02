@@ -14,7 +14,7 @@ var _libBreakpointPartitionJs2 = _interopRequireDefault(_libBreakpointPartitionJ
 
 function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
-  opts.margin = opts.hasOwnProperty('margin') ? opts.margin : 0;
+  opts.margin = opts.margin || 0;
 
   var rows = _perfectRowsNumber(photos, screenWidth, screenHeight);
   var idealHeight = parseInt(screenHeight / 2, 10);
@@ -62,7 +62,7 @@ function perfectLayout(photos, screenWidth, screenHeight, opts) {
 }
 
 function _perfectRowsNumber(photos, screenWidth, screenHeight) {
-  var idealHeight = parseInt(screenHeight / 2, 10);
+  var idealHeight = parseInt(screenHeight / 2);
   var totalWidth = photos.reduce(function (sum, img) {
     return sum + img.ratio * idealHeight;
   }, 0);
@@ -100,6 +100,12 @@ $.fn.perfectLayout = function (photos) {
 };
 
 },{".":1}],3:[function(require,module,exports){
+// Rather than blindly perform a binary search from the maximum width. It starts
+// from the ideal width (The ideal width being the width if the images fit
+// perfectly in the given container.) and expands to the next width that will
+// allow an item to move up a row. This algorithm will find the exact width that
+// produces the "ideal" layout and should generally find it in two or three
+// passes.
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -130,8 +136,8 @@ function BreakpointPartition(imageRatioSequence, expectedRowCount) {
 // a width that produces the expected number of rows
 function findLayoutWidth(imageRatioSequence, expectedRowCount) {
   var idealWidth = sum(imageRatioSequence) / expectedRowCount;
-  var widestItem = max(imageRatioSequence);
-  var galleryWidth = max([idealWidth, widestItem]);
+  var widestItem = Math.max.apply(null, imageRatioSequence);
+  var galleryWidth = Math.max(idealWidth, widestItem);
   var layout = getLayoutDetails(imageRatioSequence, galleryWidth);
 
   while (layout.rowCount > expectedRowCount) {
@@ -150,9 +156,11 @@ function getLayoutDetails(imageRatioSequence, expectedWidth) {
     // the largest possible step to the next breakpoint is the smallest image ratio
     nextBreakpoint: Math.min.apply(null, imageRatioSequence)
   };
+
   var finalLayout = imageRatioSequence.reduce(function (layout, itemWidth) {
     var rowWidth = layout.currentRowWidth + itemWidth;
     var currentRowsNextBreakpoint = undefined;
+
     if (rowWidth > expectedWidth) {
       currentRowsNextBreakpoint = rowWidth - expectedWidth;
       if (currentRowsNextBreakpoint < layout.nextBreakpoint) {
@@ -163,20 +171,18 @@ function getLayoutDetails(imageRatioSequence, expectedWidth) {
     } else {
       layout.currentRowWidth = rowWidth;
     }
+
     return layout;
   }, startingLayout);
-  return { rowCount: finalLayout.rowCount, nextBreakpoint: finalLayout.nextBreakpoint };
+  return {
+    rowCount: finalLayout.rowCount,
+    nextBreakpoint: finalLayout.nextBreakpoint
+  };
 }
 
 function sum(arr) {
   return arr.reduce(function (sum, el) {
     return sum + el;
-  }, 0);
-}
-
-function max(arr) {
-  return arr.reduce(function (max, el) {
-    return el > max ? el : max;
   }, 0);
 }
 module.exports = exports['default'];

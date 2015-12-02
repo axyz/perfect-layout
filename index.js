@@ -2,9 +2,7 @@ import BreakpointPartition from './lib/BreakpointPartition.js';
 
 export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
   opts = opts || {};
-  opts.margin = opts.hasOwnProperty('margin')
-    ? opts.margin
-    : 0;
+  opts.margin = opts.margin || 0;
 
   const rows = _perfectRowsNumber(photos, screenWidth, screenHeight);
   const idealHeight = parseInt(screenHeight / 2, 10);
@@ -42,7 +40,7 @@ export default function perfectLayout(photos, screenWidth, screenHeight, opts) {
 }
 
 function _perfectRowsNumber(photos, screenWidth, screenHeight) {
-  const idealHeight = parseInt(screenHeight / 2, 10);
+  const idealHeight = parseInt(screenHeight / 2);
   const totalWidth = photos.reduce((sum, img) => sum + img.ratio * idealHeight, 0);
   return Math.round(totalWidth / screenWidth);
 }
