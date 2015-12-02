@@ -101,6 +101,10 @@ you may need and is probably a good idea to provide it from your backend.
 
 ## Changelog
 
+## [v1.2.0]
+### Changed
+- using breakPointPartition thanks to @GreenGremlin
+
 ## [v1.1.1]
 ### Changed
 - using BST based linear partitioning instead of greedy one
