@@ -4,7 +4,7 @@
 
 [DEMO](http://codepen.io/axyz/full/VLJrKr/)
 
-given an array of images in the form
+given an array of images in the form:
 
 ```
 {
@@ -120,3 +120,6 @@ you may need and is probably a good idea to provide it from your backend.
 
 ## [v1.0.0]
 ### Initial Release
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTExNjE2ODIwOTFdfQ==
+-->
